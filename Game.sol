@@ -1,9 +1,8 @@
 pragma solidity ^0.4.24;
 contract Game{
-    int reward;
     mapping(int=>mapping(int=>int)) board;
-    int turn;
-    int count;
+    int  public turn;
+    int  public count;
     int total_fee;
     address host;
     int public winner;
@@ -24,7 +23,7 @@ contract Game{
             for(int j=0;j<3;j++)
                 board[i][j]=-1;
         }
-        turn=0;
+        turn=1;
         count=0;
         host=msg.sender;winner=0;
     }
@@ -53,7 +52,6 @@ contract Game{
             p2.addr=msg.sender;
             p2.fee=f;
             p2.balance=0;
-            count++;
             p2.turn=2;
             total_fee+=f;
             count++;
@@ -88,10 +86,21 @@ contract Game{
             p2.balance=(2*total_fee)/3;
 
     }
+    function boardfull() public returns(bool)
+    {
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                if(board[i][j]==-1)
+                return false;
+            }
+        }
+        return true;
+    }
     function play(int row,int col)
     {
-        if(msg.sender==host&&winner==0){
-        if(count==2&&row>=0&&row<3&&col>=0&&col<3&&board[row][col]==-1)
+        if(winner==0&&count==2&&row>=0&&row<3&&col>=0&&col<3&&board[row][col]==-1)
         {
             address a=msg.sender;
             if(p1.addr==a&&turn==1)
@@ -117,6 +126,9 @@ contract Game{
                 turn=1;
             }
         }
-        }
+        if(boardfull()&&winner==0)
+            turn=0;
+    
+        
     }
 }
