@@ -5,6 +5,7 @@ contract Game{
     int  public count;
     int total_fee;
     address host;
+    string public win;
     int public winner;
     struct player
     {
@@ -13,8 +14,8 @@ contract Game{
         int fee;
         int turn;
     }
-    player p1;
-    player p2;
+    player public p1;
+    player public p2;
     //player wins 2/3 of the total fee paid
     function Game()
     {
@@ -111,6 +112,7 @@ contract Game{
                 {
                     add_reward(a);
                     winner=1;
+                    win = "Player 1";
                 }
                 turn=2;
             }
@@ -122,12 +124,16 @@ contract Game{
                 {
                     add_reward(a);
                     winner=2;
+                    win = "Player 2";
                 }
                 turn=1;
             }
         }
         if(boardfull()&&winner==0)
-            turn=0;
+            {
+                turn=0;
+                win = "No winner";
+            }
     
         
     }
